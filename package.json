@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@zernio/node": "^0.2.560"
+  }
+}
