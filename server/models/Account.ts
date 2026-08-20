@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const accountSchema = new mongoose.Schema({
     user : {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     platform : {type: String, enum : ['twitter', 'facebook', 'instagram' ,'facebook_page', 'linkedin','instagram_business'], required: true},
-    handle: { type:String,requiered:true},
+    handle: { type:String,required:true},
     zernioAccountId: { type: String},
     accessToken: { type: String },
     refreshToken: { type: String},

@@ -6,6 +6,9 @@ import authRouter from "./routes/authRoutes.js";
 import socialAuthRouter from "./routes/socialAuthRoutes.js";
 import accountRouter from "./routes/accountRoutes.js";
 import postRouter from "./routes/postRoutes.js";
+import activityRouter from "./routes/activityRoutes.js";
+import {initScheduler} from "./services/schedulerService.js";
+
 
 const app = express();
 
@@ -27,6 +30,10 @@ app.use("/api/auth",authRouter);
 app.use("/api/oauth",socialAuthRouter); // Use the socialAuthRouter for OAuth routes
 app.use("/api/accounts",accountRouter); // Use the accountRouter for account management routes
 app.use("/api/posts",postRouter)
+app.use("/api/activity",activityRouter)
+
+initScheduler()
+
 
 
 //Global Error Handler
