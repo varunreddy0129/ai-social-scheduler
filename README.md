@@ -2,23 +2,29 @@
 
 > 🚀 A full-stack AI-powered social media automation platform for creating, generating, scheduling, and publishing content across multiple social media platforms from a single dashboard.
 
-<p align="center">
-  <a href="https://ai-social-scheduler-phi.vercel.app/">🌐 Live Demo</a>
-  &nbsp; • &nbsp;
-  <a href="https://github.com/varunreddy0129/ai-social-scheduler">💻 GitHub</a>
-  &nbsp; • &nbsp;
-  <a href="https://ai-social-scheduler-1.onrender.com">⚙️ Backend API</a>
-</p>
+---
+
+## 🌐 Live Demo
+
+🚀 **AI Social Scheduler**
+
+👉 https://ai-social-scheduler-phi.vercel.app/
+
+---
+
+## ⚙️ Backend API
+
+🔗 https://ai-social-scheduler-1.onrender.com
 
 ---
 
 ## 🌟 Overview
 
-**AI Social Scheduler** is a production-deployed full-stack application that helps users manage their social media content from one centralized platform.
+**AI Social Scheduler** is a full-stack social media automation platform designed to simplify content creation, scheduling, and publishing.
 
-Users can create posts manually, generate captions with AI, optionally generate images, upload media, connect social accounts using OAuth, schedule posts for future publication, and monitor publishing activity.
+Users can create posts manually or generate content using AI, attach media, connect social media accounts through OAuth, schedule posts for future publication, and monitor publishing activity from a single dashboard.
 
-The project combines a modern React frontend with a TypeScript/Express backend, MongoDB Atlas, AI services, cloud media storage, and a unified social publishing API.
+The application combines a modern **React + TypeScript frontend** with a **Node.js + Express + TypeScript backend**, **MongoDB Atlas**, AI services, cloud media storage, and a unified social publishing API.
 
 ---
 
@@ -34,11 +40,11 @@ The project combines a modern React frontend with a TypeScript/Express backend, 
   - Friendly
   - Professional
   - Humorous
-- ⚡ Generate content directly from a simple prompt
+- ⚡ Generate content from a simple prompt
 
 ### 📱 Multi-Platform Publishing
 
-Connect and publish content to supported platforms through Zernio:
+Connect and publish content to multiple social media platforms through Zernio:
 
 - 𝕏 Twitter / X
 - 📘 Facebook
@@ -59,7 +65,7 @@ Connect and publish content to supported platforms through Zernio:
 
 - 👤 User registration and login
 - 🔑 JWT-based authentication
-- 🔒 Password hashing with bcrypt
+- 🔒 Password hashing using bcrypt
 - 🛡️ Protected API routes
 
 ### 👥 Account Management
@@ -68,7 +74,7 @@ Connect and publish content to supported platforms through Zernio:
 - 🔄 Sync connected accounts
 - 👀 View connected accounts
 - ❌ Disconnect accounts
-- 📱 Manage multiple social platforms
+- 📱 Manage multiple connected platforms
 
 ### ☁️ Media Management
 
@@ -86,67 +92,47 @@ Connect and publish content to supported platforms through Zernio:
 
 ---
 
-## 🌐 Live Application
+# 🛠️ Tech Stack
 
-| Component | URL | Status |
-|---|---|---|
-| 🎨 Frontend | https://ai-social-scheduler-phi.vercel.app/ | 🟢 Live |
-| ⚙️ Backend | https://ai-social-scheduler-1.onrender.com | 🟢 Live |
-| 💻 GitHub | https://github.com/varunreddy0129/ai-social-scheduler | 🟢 Available |
+## 🎨 Frontend
 
-> 💡 The backend is hosted on a free-tier service. If it has been inactive, the first request may take a little longer while the service starts.
+- ⚛️ React 19
+- 🔷 TypeScript
+- ⚡ Vite
+- 🎨 Tailwind CSS
+- 🧭 React Router
+- 📡 Axios
 
----
+## ⚙️ Backend
 
-## 🛠️ Tech Stack
+- 🟢 Node.js
+- 🚂 Express 5
+- 🔷 TypeScript
+- 🍃 MongoDB
+- 🦫 Mongoose
+- 🔑 JWT
+- 🔒 bcrypt
+- ⏰ node-cron
+- 📤 Multer
 
-### 🎨 Frontend
+## 🤖 AI & Cloud Services
 
-| Technology | Purpose |
-|---|---|
-| ⚛️ React 19 | User interface |
-| 🔷 TypeScript | Type safety |
-| ⚡ Vite | Development and build tooling |
-| 🎨 Tailwind CSS | Styling |
-| 🧭 React Router | Client-side routing |
-| 📡 Axios | API communication |
+- ✨ Google Gemini — AI content generation
+- 🎨 Replicate — AI image generation
+- ☁️ Cloudinary — media storage
+- 📱 Zernio — social account integration and publishing
+- 🍃 MongoDB Atlas — cloud database
 
-### ⚙️ Backend
+## 🚀 Deployment
 
-| Technology | Purpose |
-|---|---|
-| 🟢 Node.js | JavaScript runtime |
-| 🚂 Express 5 | REST API |
-| 🔷 TypeScript | Type safety |
-| 🍃 MongoDB | Database |
-| 🦫 Mongoose | MongoDB ODM |
-| 🔑 JWT | Authentication |
-| 🔒 bcrypt | Password hashing |
-| ⏰ node-cron | Background scheduling |
-| 📤 Multer | File uploads |
-
-### 🤖 AI & Cloud Services
-
-| Service | Purpose |
-|---|---|
-| ✨ Google Gemini | AI text/content generation |
-| 🎨 Replicate | AI image generation |
-| ☁️ Cloudinary | Media storage |
-| 📱 Zernio | Social account integration and publishing |
-| 🍃 MongoDB Atlas | Cloud database |
-
-### 🚀 Deployment
-
-| Platform | Component |
-|---|---|
-| ▲ Vercel | Frontend |
-| 🟣 Render | Backend |
-| 🍃 MongoDB Atlas | Database |
-| ☁️ Cloudinary | Media storage |
+- ▲ Vercel — frontend
+- 🟣 Render — backend
+- 🍃 MongoDB Atlas — database
+- ☁️ Cloudinary — media storage
 
 ---
 
-## 🏗️ System Architecture
+# 🏗️ System Architecture
 
 ```text
                          👤 USER
@@ -192,7 +178,7 @@ Connect and publish content to supported platforms through Zernio:
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```text
 ai-social-scheduler/
@@ -316,7 +302,7 @@ Production-style start:
 npm start
 ```
 
-Local backend:
+The backend will run locally at:
 
 ```text
 http://localhost:3000
@@ -481,7 +467,7 @@ http://localhost:5173
 
 ## 🎨 Frontend — Vercel
 
-The React frontend is deployed using Vercel.
+The React/Vite frontend is deployed using Vercel.
 
 ### Configuration
 
@@ -499,7 +485,7 @@ VITE_API_URL=https://ai-social-scheduler-1.onrender.com
 
 ### 🌐 Live Frontend
 
-https://ai-social-scheduler-phi.vercel.app/
+👉 https://ai-social-scheduler-phi.vercel.app/
 
 ---
 
@@ -517,7 +503,7 @@ Start Command: npm start
 
 ### 🌐 Live Backend
 
-https://ai-social-scheduler-1.onrender.com
+👉 https://ai-social-scheduler-1.onrender.com
 
 The backend uses Render's automatically assigned `PORT` in production.
 
@@ -545,7 +531,7 @@ The application follows several security practices:
 - 🚫 Secrets are not hard-coded in source code
 - 🔒 Production communication uses HTTPS
 - 🛡️ Protected API routes
-- 📁 `.env` files should be excluded from Git
+- 📁 `.env` files are excluded from Git
 
 ### 🚨 Never commit
 
@@ -557,13 +543,11 @@ The application follows several security practices:
 
 or any file containing private credentials.
 
-> If an API key is accidentally exposed, revoke or rotate it immediately.
+> ⚠️ If an API key is accidentally exposed, revoke or rotate it immediately.
 
 ---
 
-# 🧪 Testing Checklist
-
-Before considering a deployment complete, test:
+# 🧪 Deployment Checklist
 
 - [x] 🏠 Landing page
 - [x] 📝 User registration
@@ -712,9 +696,6 @@ Add screenshots of your application here:
 ## Varun Reddy
 
 🎓 Computer Science & Engineering Student
-
-💻 GitHub:  
-https://github.com/varunreddy0129
 
 ---
 
