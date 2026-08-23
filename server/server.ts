@@ -1,3 +1,8 @@
+import dns from "node:dns";
+
+dns.setServers(["8.8.8.8"]);
+
+
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from 'express';
 import cors from "cors";

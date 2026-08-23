@@ -1,24 +1,31 @@
 import {useEffect, useState} from "react"
-import { dummyAccountsData, dummyPostsData, PLATFORMS } from "../assets/assets";
-import { Calendar, CalendarIcon, XIcon ,ClockIcon ,ArrowRightIcon ,CalendarDaysIcon, SendIcon} from "lucide-react";
+import {  PLATFORMS } from "../assets/assets";
+import { CalendarIcon, XIcon ,ClockIcon ,ArrowRightIcon ,CalendarDaysIcon, SendIcon} from "lucide-react";
+import api from "../api/axios";
+import { toast } from "react-hot-toast";
 
 const Scheduler = () => {
     
     const[posts, setPosts] = useState<any[]>([]);
     const[content,setContent] = useState(""); 
-    const[scheduledDate, setScehduledDate] = useState("");
+    const[scheduledDate, setScheduledDate] = useState("");
     const[scheduledTime,setScheduledTime] = useState("");
     const[selectedPlatforms,setSelectedPlatforms] = useState<string[]>([]);
     const[mediaFile, setMediaFile] = useState<File | null>(null);
     const[loading, setLoading] = useState(false);
 
     const fetchPosts = async () => {
-        setPosts(dummyPostsData)
+        try {
+            const { data } = await api.get("/api/posts")
+            setPosts(data)
+        } catch (error : any) {
+            toast.error(error?.response?.data?.message || error.message);
+        }
     }
 
     useEffect(() => {
         (async () => await fetchPosts())();
-        const interval = setInterval(async () => await fetchPosts(),1000);
+        const interval = setInterval(async () => await fetchPosts(),10000);
         return () => clearInterval(interval)
     },[])
 
@@ -30,11 +37,45 @@ const Scheduler = () => {
 
     const handleSchedule = async(e:React.FormEvent) => {
         e.preventDefault()
+        if(selectedPlatforms.length === 0){
+            toast.error("Select at least one platform");
+            return;
+        }
+        if(!scheduledDate || !scheduledTime){
+            toast.error("Select date and time");
+            return;
+        }
+        if(selectedPlatforms.includes('instagram') && !mediaFile){
+            toast.error("Instagram requires an image or video");
+            return;
+        }
+
+        const scheduledFor = new Date(`${scheduledDate}T${scheduledTime}`).toISOString();
+        const formData = new FormData();
+        formData.append("content",content);
+        formData.append("scheduledFor",scheduledFor);
+        formData.append("status","scheduled");
+        formData.append("platforms",JSON.stringify(selectedPlatforms));
+        if(mediaFile) formData.append("media",mediaFile);
+        
         setLoading(true)
-        setTimeout(() => {
-            setLoading(false)
-            setPosts((prev) => [...prev,dummyPostsData[0]])
-        },1000)
+        try{
+            await api.post("/api/posts",formData,{headers: {"content-type": "multipart/form-data"}})
+            toast.success("Post scheduled!");
+            setContent("");
+            setScheduledDate("");
+            setScheduledTime("");
+            setSelectedPlatforms([]);
+            setMediaFile(null);
+            fetchPosts();
+
+
+        }catch(error : any){
+            toast.error(error?.response?.data?.message|| error.message);
+        }finally{
+            setLoading(false);
+        }
+
     }
     
 
@@ -109,7 +150,7 @@ const Scheduler = () => {
                                 <label className="block text-xs text-slate-500 uppercase mb-2">Date</label>
                                 <div className="relative">
                                     <CalendarIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-                                    <input type ="date" required className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-sm outline-none" value ={scheduledDate} onChange ={(e) => setScehduledDate(e.target.value)}/>
+                                    <input type ="date" required className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-sm outline-none" value ={scheduledDate} onChange ={(e) => setScheduledDate(e.target.value)}/>
                                 </div>
                             </div>
                             <div>
