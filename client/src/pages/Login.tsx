@@ -21,9 +21,10 @@ export default function Login() {
             const {data} =  await api.post(`/api/auth/${loginState ? "login" : "register"}`,{
                 name,email,password
             })
-            login(data,data.totoken)
+            login(data,data.token)
             navigate("/dashboard")
         } catch (error: any) {
+            console.error("AUTH ERROR:", error);
             toast.error(error.response?.data?.message || error?.message)
         }finally{
             setLoading(false)
