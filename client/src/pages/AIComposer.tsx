@@ -24,7 +24,7 @@ const AIComposer = () => {
 
     const fetchGenerations = async () => {
         try {
-            const { data } = await api.get("api/posts/generations")
+            const { data } = await api.get("/api/posts/generations")
             setGenerations(data)
         } catch (error : any) {
             toast.error(error?.response?.data?.message || error?.message);
@@ -63,6 +63,7 @@ const AIComposer = () => {
         }
         if(!scheduledDate || !scheduledTime){
             toast.error("select date and time");
+            return;
         }
         const scheduledFor = new Date(`${scheduledDate}T${scheduledTime}`).toISOString()
         setScheduling(true);
@@ -78,7 +79,6 @@ const AIComposer = () => {
             })
             toast.success(" AI Post scheduled!");
             setActiveScheduler(null);
-            setScheduledDate("");
             setScheduledDate("");
             setScehduledTime("");
             setSelectedPlatforms([]);
