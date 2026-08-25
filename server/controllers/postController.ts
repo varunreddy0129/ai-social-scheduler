@@ -42,7 +42,7 @@ export const generatePost = async (
 
         const textResponse = await ai.models.generateContent({
 
-            model: "gemini-2.5-flash",
+            model: "gemini-3.6-flash",
 
             contents: `Generate a social media post based on this prompt: "${prompt}".
 
@@ -94,104 +94,108 @@ The "imagePrompt" should be a highly descriptive prompt for an image generator t
         // 3. REPLICATE - GENERATE IMAGE
         // =========================================================
 
-        let mediaUrl = "";
-        let mediaType: "image" | "video" | undefined;
+        // =========================================================
+        // 3. REPLICATE - GENERATE IMAGE
+        // =========================================================
 
-        if (generateImage) {
+        // =========================================================
+        // 3. REPLICATE - GENERATE IMAGE
+        // =========================================================
 
-            try {
+        // =========================================================
+// 3. REPLICATE - GENERATE IMAGE
+// =========================================================
 
-                const replicateApiKey =
-                    process.env.REPLICATE_API_KEY;
+let mediaUrl = "";
+let mediaType: "image" | "video" | undefined;
 
-                if (!replicateApiKey) {
+if (generateImage) {
+    try {
+        const replicateApiKey = process.env.REPLICATE_API_KEY;
 
-                    throw new Error(
-                        "Replicate API key is missing. Please add REPLICATE_API_KEY to your .env file."
-                    );
-
-                }
-
-                const replicate = new Replicate({
-                    auth: replicateApiKey,
-                });
-
-                console.log(
-                    "Generating image with Replicate..."
-                );
-
-                const output = await replicate.run(
-
-                    "black-forest-labs/flux-schnell",
-
-                    {
-                        input: {
-                            prompt: imagePrompt,
-                        },
-                    }
-
-                );
-
-                console.log(
-                    "Replicate output:",
-                    output
-                );
-
-                // =================================================
-                // 4. UPLOAD REPLICATE IMAGE TO CLOUDINARY
-                // =================================================
-
-                if (
-                    Array.isArray(output) &&
-                    output.length > 0
-                ) {
-
-                    const replicateImageUrl =
-                        output[0].toString();
-
-                    console.log(
-                        "Replicate image URL:",
-                        replicateImageUrl
-                    );
-
-                    console.log(
-                        "Uploading generated image to Cloudinary..."
-                    );
-
-                    const cloudinaryResult =
-                        await cloudinary.uploader.upload(
-
-                            replicateImageUrl,
-
-                            {
-                                folder: "social-scheduler",
-                                resource_type: "image",
-                            }
-
-                        );
-
-                    mediaUrl =
-                        cloudinaryResult.secure_url;
-
-                    mediaType = "image";
-
-                    console.log(
-                        "Cloudinary image URL:",
-                        mediaUrl
-                    );
-                }
-
-            } catch (error: any) {
-
-                console.error(
-                    "Image generation/upload error:",
-                    error?.message || error
-                );
-
-                mediaUrl = "";
-                mediaType = undefined;
-            }
+        if (!replicateApiKey) {
+            throw new Error("REPLICATE_API_KEY is missing");
         }
+
+        const replicate = new Replicate({
+            auth: replicateApiKey,
+        });
+
+        console.log("====================================");
+        console.log("IMAGE GENERATION STARTED");
+        console.log("Image prompt:", imagePrompt);
+        console.log("====================================");
+
+        const output: any = await replicate.run(
+            "black-forest-labs/flux-schnell",
+            {
+                input: {
+                    prompt: imagePrompt,
+                    num_outputs: 1,
+                    aspect_ratio: "1:1",
+                    output_format: "webp",
+                    output_quality: 80,
+                },
+            }
+        );
+
+        console.log("Replicate output:", output);
+        console.log("Output length:", output?.length);
+
+        if (!output || output.length === 0) {
+            throw new Error("Replicate returned no image");
+        }
+
+        const imageOutput = output[0];
+
+        // Replicate FileOutput
+        const replicateImageUrl =
+            typeof imageOutput.url === "function"
+                ? imageOutput.url()
+                : imageOutput.url;
+
+        console.log("Replicate image URL:", replicateImageUrl);
+
+        if (!replicateImageUrl) {
+            throw new Error("Could not get image URL from Replicate");
+        }
+
+        // =========================================================
+        // 4. UPLOAD TO CLOUDINARY
+        // =========================================================
+
+        console.log("Uploading image to Cloudinary...");
+
+        const cloudinaryResult =
+            await cloudinary.uploader.upload(
+                replicateImageUrl,
+                {
+                    folder: "social-scheduler",
+                    resource_type: "image",
+                }
+            );
+
+        mediaUrl = cloudinaryResult.secure_url;
+        mediaType = "image";
+
+        console.log("====================================");
+        console.log("CLOUDINARY IMAGE URL:", mediaUrl);
+        console.log("IMAGE GENERATION SUCCESS");
+        console.log("====================================");
+
+    } catch (error: any) {
+
+        console.error("====================================");
+        console.error("IMAGE GENERATION FAILED");
+        console.error("Error:", error?.message || error);
+        console.error("Full error:", error);
+        console.error("====================================");
+
+        // Keep content generation working even if image fails
+        mediaUrl = "";
+        mediaType = undefined;
+    }
+}
 
         // =========================================================
         // 5. SAVE GENERATION TO DATABASE
@@ -384,7 +388,7 @@ export const schedulePost = async (
                     ? "video"
                     : "image";
         }
-       // 4. CREATE POST IN DATABASE
+        // 4. CREATE POST IN DATABASE
         const post = await Post.create({
             user: req.user._id,
             content,
