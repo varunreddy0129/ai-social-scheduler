@@ -94,88 +94,143 @@ The "imagePrompt" should be a highly descriptive prompt for an image generator t
         // 3. REPLICATE - GENERATE IMAGE
         // =========================================================
 
+        // =========================================================
+        // 3. REPLICATE - GENERATE IMAGE
+        // =========================================================
+
+        // =========================================================
+        // 3. REPLICATE - GENERATE IMAGE
+        // =========================================================
+
         let mediaUrl = "";
         let mediaType: "image" | "video" | undefined;
 
         if (generateImage) {
-
             try {
-
-                const replicateApiKey =
-                    process.env.REPLICATE_API_KEY;
+                const replicateApiKey = process.env.REPLICATE_API_KEY;
 
                 if (!replicateApiKey) {
-
                     throw new Error(
                         "Replicate API key is missing. Please add REPLICATE_API_KEY to your .env file."
                     );
-
                 }
 
                 const replicate = new Replicate({
                     auth: replicateApiKey,
                 });
 
-                console.log(
-                    "Generating image with Replicate..."
-                );
+                console.log("====================================");
+                console.log("IMAGE GENERATION STARTED");
+                console.log("Image prompt:", imagePrompt);
+                console.log("====================================");
 
                 const output = await replicate.run(
-
                     "black-forest-labs/flux-schnell",
-
                     {
                         input: {
                             prompt: imagePrompt,
+                            num_outputs: 1,
+                            aspect_ratio: "1:1",
+                            output_format: "webp",
+                            output_quality: 80,
                         },
                     }
+                );
 
+                console.log("Replicate output:", output);
+                console.log(
+                    "Replicate output type:",
+                    typeof output
+                );
+                console.log(
+                    "Is array:",
+                    Array.isArray(output)
+                );
+
+                if (!Array.isArray(output) || output.length === 0) {
+                    throw new Error(
+                        "Replicate returned no image output."
+                    );
+                }
+
+                const firstOutput: any = output[0];
+
+                console.log(
+                    "First output:",
+                    firstOutput
+                );
+
+                // Current Replicate SDK returns FileOutput
+                let replicateImageUrl: string;
+
+                if (typeof firstOutput.url === "function") {
+                    replicateImageUrl = firstOutput.url();
+                } else if (typeof firstOutput.url === "string") {
+                    replicateImageUrl = firstOutput.url;
+                } else if (typeof firstOutput === "string") {
+                    replicateImageUrl = firstOutput;
+                } else {
+                    throw new Error(
+                        "Could not extract image URL from Replicate output."
+                    );
+                }
+
+                console.log(
+                    "Replicate image URL:",
+                    replicateImageUrl
                 );
 
                 console.log(
-                    "Replicate output:",
-                    output
+                    "Uploading generated image to Cloudinary..."
                 );
 
-                // =================================================
-                // 4. UPLOAD REPLICATE IMAGE TO CLOUDINARY
-                // =================================================
-
-                if (Array.isArray(output) && output.length > 0) {
-                    const replicateImageUrl = output[0].url();
-
-                    console.log(
-                        "Replicate image URL:",
-                        replicateImageUrl
+                const cloudinaryResult =
+                    await cloudinary.uploader.upload(
+                        replicateImageUrl,
+                        {
+                            folder: "social-scheduler",
+                            resource_type: "image",
+                        }
                     );
 
-                    console.log(
-                        "Uploading generated image to Cloudinary..."
-                    );
+                mediaUrl = cloudinaryResult.secure_url;
+                mediaType = "image";
 
-                    const cloudinaryResult =
-                        await cloudinary.uploader.upload(
-                            replicateImageUrl,
-                            {
-                                folder: "social-scheduler",
-                                resource_type: "image",
-                            }
-                        );
-
-                    mediaUrl = cloudinaryResult.secure_url;
-                    mediaType = "image";
-
-                    console.log(
-                        "Cloudinary image URL:",
-                        mediaUrl
-                    );
-                }
+                console.log(
+                    "===================================="
+                );
+                console.log(
+                    "CLOUDINARY IMAGE URL:",
+                    mediaUrl
+                );
+                console.log(
+                    "IMAGE GENERATION SUCCESS"
+                );
+                console.log(
+                    "====================================");
 
             } catch (error: any) {
 
                 console.error(
-                    "Image generation/upload error:",
+                    "===================================="
+                );
+
+                console.error(
+                    "IMAGE GENERATION FAILED"
+                );
+
+                console.error(
+                    "Error:",
                     error?.message || error
+                );
+
+                console.error(
+                    "Full error:",
+                    error
+                );
+
+                console.error(
+                    "===================================="
                 );
 
                 mediaUrl = "";
