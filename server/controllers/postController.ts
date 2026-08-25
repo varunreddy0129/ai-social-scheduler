@@ -141,13 +141,8 @@ The "imagePrompt" should be a highly descriptive prompt for an image generator t
                 // 4. UPLOAD REPLICATE IMAGE TO CLOUDINARY
                 // =================================================
 
-                if (
-                    Array.isArray(output) &&
-                    output.length > 0
-                ) {
-
-                    const replicateImageUrl =
-                        output[0].toString();
+                if (Array.isArray(output) && output.length > 0) {
+                    const replicateImageUrl = output[0].url();
 
                     console.log(
                         "Replicate image URL:",
@@ -160,19 +155,14 @@ The "imagePrompt" should be a highly descriptive prompt for an image generator t
 
                     const cloudinaryResult =
                         await cloudinary.uploader.upload(
-
                             replicateImageUrl,
-
                             {
                                 folder: "social-scheduler",
                                 resource_type: "image",
                             }
-
                         );
 
-                    mediaUrl =
-                        cloudinaryResult.secure_url;
-
+                    mediaUrl = cloudinaryResult.secure_url;
                     mediaType = "image";
 
                     console.log(
@@ -384,7 +374,7 @@ export const schedulePost = async (
                     ? "video"
                     : "image";
         }
-       // 4. CREATE POST IN DATABASE
+        // 4. CREATE POST IN DATABASE
         const post = await Post.create({
             user: req.user._id,
             content,
